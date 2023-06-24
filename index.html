@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
   <title>Votação</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -15,12 +16,12 @@
       margin: 0;
       padding: 20px;
     }
-    
+
     h1 {
       text-align: center;
       color: #333;
     }
-    
+
     .container {
       max-width: 400px;
       margin: 0 auto;
@@ -29,31 +30,31 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    
+
     .participant {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: 10px;
     }
-    
+
     .participant img {
       width: 150px;
       height: 150px;
       object-fit: cover;
       border-radius: 50%;
     }
-    
+
     .participant strong {
       margin-top: 10px;
       font-size: 18px;
       color: #333;
     }
-    
+
     .form-group {
       margin-bottom: 20px;
     }
-    
+
     .form-group input[type="number"] {
       width: 100%;
       padding: 10px;
@@ -63,7 +64,7 @@
       box-sizing: border-box;
 
     }
-    
+
     .form-group button {
       display: block;
       width: 100%;
@@ -75,58 +76,85 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    
+
     #participantDiv {
       display: none;
     }
   </style>
-   <script>
+  <script>
     var participants = {
-      1: { name: "Elton", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-1/89024202_951962008552167_1314257677588627456_n.jpg?stp=cp0_dst-jpg_e15_p120x120_q65&_nc_cat=111&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=nSuBQRzgTtkAX-EmOoF&_nc_ht=scontent.fbau3-1.fna&oh=00_AfB8A8oWnHZVQHuQWbXB8VaGerolf0UP9AQZIAw6B-LsPg&oe=64BDB202" },
-      2: { name: "Daniela", image: "caminho_da_imagem_participante_2.jpg" },
+      1: { name: "BEATRIZ", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/312213237_5416026088466434_2907447178323697426_n.jpg?stp=cp0_dst-jpg_e15_p960x960_q65&_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&efg=eyJpIjoidCJ9&_nc_eui2=AeF8Wt0dGsv5G8WEhWVBPPGcXzt5S7Tw9lxfO3lLtPD2XD6Pn4Sssh3RNYVp2fBWM1o8_AXQtISKSn_QU-tre5Mc&_nc_ohc=iNV_OPRDNSQAX_BXETs&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-2.fna&oh=00_AfAc8FqanE-21_0JmpPfxUkV4uLCDNaB4K2lpfZkL2L3Yw&oe=649C90CF" },
+      2: { name: "BRUNO EUGENIO", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t1.6435-9/34756403_411126476022004_1233281674154868736_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=109&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeF3DsEhAxkmxWldyc-FJQsUHaGcaxKOe0MdoZxrEo57QyVSpT_hSYnFds-GYbp4KmESRcs7vp3B57zkU2h_LFRW&_nc_ohc=idH60mQXu6IAX8itohA&_nc_oc=AQm2_mw4uqnfnBoz4Lv4_vqMGxSkh3zgYcFdz6qRLJieUZJ4uW4z6UowfZE6d0n7j6FFo6xh8rmDkArgovwC7MTY&_nc_ht=scontent.fbau3-2.fna&oh=00_AfAsiFghRosyjqxOiiWeJv5pSDR0i-nbnZaO4eUP5wAQyA&oe=64BEA63A" },
+      3: { name: "BRUNO PIVA", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/281380384_2610274215771068_3670458602427488523_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=111&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeHLV3er2r4euXFKtEa9_Myx3IOZiHfRDw_cg5mId9EPD0ZffNJzwBbfinm9h02mazHEwbcYB5hoY-82jx7dJEVO&_nc_ohc=Y5dX9Ou23RkAX-Cd_jt&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-1.fna&oh=00_AfDc9FhkW9P3-i_R5Y3QPV7w2d1zcy8--EPvJ1tMRThurQ&oe=649C94E3" },
+      4: { name: "CARLINHOS", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.18169-9/16938911_1878822245732754_1420108164323903701_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=103&ccb=1-7&_nc_sid=7aed08&efg=eyJpIjoidCJ9&_nc_eui2=AeEqH4tPmpKery6pE11gYLzCG2347nG-5e8bbfjucb7l77Son52TSnfb3LpWepDjWQJyQ4Gj0W-gaILA98s_AAyV&_nc_ohc=voOFpww5RwoAX8ssfAc&_nc_ht=scontent.fbau3-1.fna&oh=00_AfDcj7yUzrkleqUmWA4Ljz9VmlwwyxyXuSCGYDzcJpTWPQ&oe=64BE9B6F" },
+      5: { name: "CLAUDIO", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t1.6435-9/121491831_2047649215369192_4031193908829895712_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=108&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeEGiYv-MxLVqpBr8ywrU9hIvtvL2YhC_na-28vZiEL-diAXBIpOehe_juyy3Q0BH_YL6s_W_JTC1MNTUTQL11zG&_nc_ohc=FNTYdB2za2UAX91ABNv&_nc_ht=scontent.fbau3-2.fna&oh=00_AfCptRxVUvwz7MCJBrDyOvkU8ZjPqGqYRp7hDH-XVBmK0Q&oe=64BE86A5" },
+      6: { name: "CLEBER", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t1.18169-9/300106_168455899908948_1301589056_n.jpg?stp=cp0_dst-jpg_e15_q65_s403x403&_nc_cat=107&ccb=1-7&_nc_sid=210fed&efg=eyJpIjoidCJ9&_nc_eui2=AeG2Lmj8wq7wGkzZtRIyOyvY4_Q_vLzbw9fj9D-8vNvD1x0SESo_nZhi8GWpWNtRKSHkwC3ZlRYGwUex8S_vHQm-&_nc_ohc=bVYzFlEVtuMAX95DHlV&_nc_ht=scontent.fbau3-2.fna&oh=00_AfClJYuvo2qlw4Gmgcif7jqKTobqRgvHARQfQDubpdKLwg&oe=64BEA19F" },
+      7: { name: "MARIANA", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-9/122036404_3667170843301844_88862951540213159_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=100&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeHuwNWKGLeAF6fMI4PZMYZ3COJtEWgeY4wI4m0RaB5jjJBHhfpZLGtI4JhpQDaC0fOX2EbZN6mia01FHpE7lpEZ&_nc_ohc=s_cy6vpWOnUAX_1yZix&_nc_ht=scontent.fbau3-1.fna&oh=00_AfCJU-wTK6jx-O4iWiaGigpL3VvBhOPSHZ20hw_B7-iYpQ&oe=64BE9FB2" },
+      8: { name: "EDUARDO", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/353667400_1825924437822582_1528590904542669678_n.jpg?stp=cp0_dst-jpg_e15_fr_q65&_nc_cat=101&ccb=1-7&_nc_sid=110474&efg=eyJpIjoidCJ9&_nc_eui2=AeG7lskImHEhgUu4zRlXHvoYlfXpXjhml1yV9eleOGaXXDuL1RkMT2vrH3lQonKw4c3k-tw-jBd_1yWkijLmo_7n&_nc_ohc=hoO3WiQnqcwAX-cCBgW&_nc_ht=scontent.fbau3-1.fna&oh=00_AfC8n3CuiLYWqMLZKbwGdkIhFnyFOa_jt7WQzSpdk96MXw&oe=649BCD6B" },
+      9: { name: "EVANDRO AGAPE", image: "" },
+      10: { name: "FERNANDO", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/309613288_2556864744453440_2255821074321041126_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=107&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeEV61HEJuFJ7dxjqjhP08YuDHcPZbHLqi4Mdw9lscuqLuEz3h9szZXjB3B6IyK7C7XRPYkGXJJQ4PTVPtMyMaIi&_nc_ohc=uW3yyfpQD7oAX-_X-U0&_nc_ht=scontent.fbau3-2.fna&oh=00_AfCSWhVTAg6YjLWSR-IFCK-KelujrUiaipXefrpUt9RfuA&oe=649C8EAB" },
+      11: { name: "JESSICA", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-9/75204517_1409727689198926_3727475547807154176_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=102&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeGyZO0_gTHaePaJPDmyaR7WRCWnWQeRYFVEJadZB5FgVbseKgeL1BHycdn3y5lIJzFW_tJ7ifW8p7bBzjoJ9yz0&_nc_ohc=VsbbHYZKN54AX_5DaOl&_nc_ht=scontent.fbau3-1.fna&oh=00_AfC_Gs_mKjUwOgSlZD2_2EYWWY0FIDBaF_w9jSChGFY3uQ&oe=64BEA4B5" },
+      12: { name: "JOÃO CARLOS", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/355901426_1825929864488706_6131265058709345702_n.jpg?stp=cp0_dst-jpg_e15_fr_q65&_nc_cat=110&ccb=1-7&_nc_sid=110474&efg=eyJpIjoidCJ9&_nc_eui2=AeELxvBv6a9TVgMEoyqfGqs2RlslDmpUd6VGWyUOalR3pe77cdZHfql7n07vPUBpGuTIGB2xFEBDgAsrDGULDEri&_nc_ohc=eNOOk-ZqkzUAX8-IXER&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-2.fna&oh=00_AfDSaz5RBqa7greohCGHVlSqhuQ_t309x7-7J0Du1gRSKg&oe=649B4813" },
+      13: { name: "JOÃO PAULO", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t1.6435-9/55711609_2151657538221734_8223025521701683200_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=110&ccb=1-7&_nc_sid=7aed08&efg=eyJpIjoidCJ9&_nc_eui2=AeHluGWn6qzCWYKGK3JPp1eFKEk0A-gePt4oSTQD6B4-3sGzXcyoamVydTT8-XMWBKdIqwcA9pNVlxKdOFLrfY1K&_nc_ohc=ntA9LlMsL_0AX_qONlU&_nc_ht=scontent.fbau3-2.fna&oh=00_AfBAwalcXCddbCtBRzh6wz5_oXep8B0f3ND9PiTSr5px1Q&oe=64BE9717" },
+      14: { name: "JOSÉ LUIZ", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t31.18172-8/18738436_105087616748216_3574084963042768080_o.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=106&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeF2K3V0v_8cy7t-DM_gbNCv-uBeX5Onx0n64F5fk6fHSeleGCjEJjUKdngMMwh6JoOJzGJEEJD9mXWAJy3vJYvF&_nc_ohc=aXSLmyTGPw8AX95g_vg&_nc_ht=scontent.fbau3-2.fna&oh=00_AfCz76sUnhhNvcSYd-qsWR4083u0v9S2iHsbnTq4p-GaJA&oe=64BEA8BA" },
+      15: { name: "JULIO", image: "" },
+      16: { name: "LEANDRO", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/353044645_6175395289196587_8113720242908415256_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=102&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeHebP0-tFZDhbEPx6IgherrsPtnWVjl0gaw-2dZWOXSBiTgVCsCIFmjYjEC7Fcv_HMCY04B17QwP9OnYH2MzdYZ&_nc_ohc=ZV5nFlbWQTgAX-0wICa&_nc_ht=scontent.fbau3-1.fna&oh=00_AfC6T1l1qSU3DhIA389ciKGtxZ5YpbpzaYR0yAOa9nfw8Q&oe=649BC1BA" },
+      17: { name: "MARCO", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/338007963_913817196436100_6839395455269587750_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=101&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeHmE4CYYg383-6gC42yXhhWFVlpBahA8ecVWWkFqEDx556c0HKrlLM5B-1694p78x8mGI99RYF7yIl3fmee1uhD&_nc_ohc=UciD6lTdGZgAX_GCiIi&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-1.fna&oh=00_AfCafeBL1LuN2EVPokP3FNQonn4mItFUw2g_X_0CuU2Z-Q&oe=649B8422" },
+      18: { name: "FERNANDA", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t1.6435-9/37032752_884356238438918_5313114878636982272_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=109&ccb=1-7&_nc_sid=7aed08&efg=eyJpIjoidCJ9&_nc_eui2=AeEtU6YeQCTaezWUCms0fDR4_-M2ztX3Gaj_4zbO1fcZqDpGNYnbhhtBvVPasU2PsZOh5AhNFbAIScqNRliVipsH&_nc_ohc=xSbxzL90keoAX8oI0o6&_nc_ht=scontent.fbau3-2.fna&oh=00_AfDpV0nIPZquA_dvND8vRhtPw8mZZ2drc7lkp7vh5acM4w&oe=64BEA7F6" },
+      19: { name: "MAYARA", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/324073501_688403616355131_112017207082720036_n.jpg?stp=cp1_dst-jpg_e15_q65_s851x315&_nc_cat=102&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeHYm8RYet-17R8sGCRgOyVGvV1hM0DU-yG9XWEzQNT7IWP9oxBpC16vP_lcdcESQX7VWw8rYfMD5eTrcUPwTgEo&_nc_ohc=LFtAUj3iyhYAX_l1eV7&_nc_ht=scontent.fbau3-1.fna&oh=00_AfABNv2b71n1elxtKgW9Xv4vsZydwbZ4HZCn-aeO4axJRw&oe=649CA9D7" },
+      20: { name: "PAULO GALACINI", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.18169-9/12196135_494341770726664_1514541431453652131_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=102&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeEU4oDjfdCexpEE8aF1rKt2fUtxZaQI_4N9S3FlpAj_gz7xav9OKnx5mbwEWL-G_oC68ZcDauEzlT2ZbK2KwQe3&_nc_ohc=YLSHbxTisgsAX9LyVTi&_nc_ht=scontent.fbau3-1.fna&oh=00_AfApWMCrY93x52XIKXRD83TDn31xTMXZP7o9Ikkw-fvTKw&oe=64BE7FF5" },
+      21: { name: "PAULINHO", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/286291238_2487292894735168_203154535092794391_n.jpg?stp=cp0_dst-jpg_e15_q65_s480x480&_nc_cat=109&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeEQs4GxWOky7XVFhRmUGj7nlOpXM49Qno6U6lczj1CejsjbrsI0HoRr_rOMRWsg6bn_ePAZX7ARtXei_TP_TcDk&_nc_ohc=GvYU7oM4vj0AX8bQNlZ&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-2.fna&oh=00_AfDeTY3UxCbEdUoAYZWxo1mFKdqmO5M_Wl0X4ofy-aK3ow&oe=649B3521" },
+      22: { name: "PRISCILA", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t39.30808-6/324333495_702891467939127_8714611017242418184_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=111&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeElmGHM6-3_bI7KeyECcfNLvSwLBi-qyLK9LAsGL6rIsm0Gs_JkMViicQZEMCZPgzpNNHXr3zOw2_7ALafo0vPq&_nc_ohc=RkfvGkr8DVEAX9pIkCV&_nc_ht=scontent.fbau3-1.fna&oh=00_AfBVgE-pNEYOhlR_A6IuBGZh7sf_eQ0v4iFQRb-Wqp9D0g&oe=649C6FEB" },
+      23: { name: "RAFAEL", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/323412854_1616443748771850_1753353321642295695_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=108&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeGpEd40LRX7MpgvmlfzD0_Ve80h5SQHRk97zSHlJAdGT4JhuoFcnf7DugEg5wIUhmYSFcvkRpLgunZd8QBNXv4M&_nc_ohc=IjFhanv-XtMAX_9m_Bi&tn=aBxlySOZ7-XzTB69&_nc_ht=scontent.fbau3-2.fna&oh=00_AfDQGC_ZvU2cuFA09WhgCeV1nkuFY9KClBYvqutc_jU4Vg&oe=649B6F9C" },
+      24: { name: "RENATA", image: "" },
+      25: { name: "STEPHANIE", image: "https://scontent.fbau3-2.fna.fbcdn.net/v/t39.30808-6/312142207_5514761098639180_1055345134211397241_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=109&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeH8b_PkgDKX85StHpuJY2fBHNhVSOhisLMc2FVI6GKws9dEK7yhepo1Ouv40Jmoy18vf5gJVSpQeYPtKv9shgDK&_nc_ohc=uwEVLGWIM5kAX9VWzHb&_nc_ht=scontent.fbau3-2.fna&oh=00_AfB02tmcG4lifICaPW4fQ1uEJz9IJBswkk-bDWAglLZPbA&oe=649CDED8" },
+      26: { name: "VALDIR", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-9/116874614_737277787071607_6876508594742647897_n.jpg?stp=cp0_dst-jpg_e15_q65_s851x315&_nc_cat=101&ccb=1-7&_nc_sid=85a577&efg=eyJpIjoidCJ9&_nc_eui2=AeFs54tyn9Hv5pNUbIIkQV8-DDbc0qbc8P8MNtzSptzw_3x432pKWCJDuW1Dc-ullSBBm8SwLiDsC75woeT4_-VR&_nc_ohc=7J5AoEP_yDkAX_5lxnE&_nc_ht=scontent.fbau3-1.fna&oh=00_AfDp5SCwt70cnk_yQGKgrHoK1OLdw0BGCF4CYNQdrH5XHg&oe=64BEA5D8" },
+      27: { name: "WELLINGTON", image: "" },
+      28: { name: "WELTON", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-1/89024202_951962008552167_1314257677588627456_n.jpg?stp=cp0_dst-jpg_e15_p120x120_q65&_nc_cat=111&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=nSuBQRzgTtkAX-EmOoF&_nc_ht=scontent.fbau3-1.fna&oh=00_AfB8A8oWnHZVQHuQWbXB8VaGerolf0UP9AQZIAw6B-LsPg&oe=64BDB202" },
+
     };
-    
+
     var voteCount = JSON.parse(localStorage.getItem('voteCount')) || {};
 
     function showParticipant() {
       var participantNumber = document.getElementById('participantNumber').value;
-      
+
       var participantDiv = document.getElementById('participantDiv');
-      
+
       if (participants[participantNumber]) {
         var participant = participants[participantNumber];
-        
+
         var participantImage = document.getElementById('participantImage');
         participantImage.src = participant.image;
         participantImage.alt = participant.name;
-        
+
         var participantName = document.getElementById('participantName');
         participantName.innerHTML = participant.name;
-        
+
         participantDiv.style.display = 'block';
       } else {
         alert('Número inválido. Verifique o número digitado.');
         participantDiv.style.display = 'none';
       }
     }
-    
+
     function confirmVote() {
       var participantNumber = document.getElementById('participantNumber').value;
-      
+
       if (participants[participantNumber]) {
         if (voteCount[participantNumber]) {
           voteCount[participantNumber]++;
         } else {
           voteCount[participantNumber] = 1;
         }
-        
+
         alert('Voto confirmado!');
-        
+
         document.getElementById('participantNumber').value = '';
-        
+
         var participantDiv = document.getElementById('participantDiv');
         participantDiv.style.display = 'none';
-        
+
         localStorage.setItem('voteCount', JSON.stringify(voteCount));
       } else {
         alert('Número inválido. Verifique o número digitado.');
@@ -134,70 +162,75 @@
     }
 
     function generateReport() {
-  var reportDiv = document.createElement('div');
-  
-  var header = document.createElement('h1');
-  header.innerText = 'Relatório de Votação';
-  reportDiv.appendChild(header);
-  
-  for (var participantNumber in participants) {
-    if (participants.hasOwnProperty(participantNumber)) {
-      var participant = participants[participantNumber];
-      var voteCountText = voteCount[participantNumber] || 0;
+      var reportDiv = document.createElement('div');
 
-      var line = document.createElement('p');
-      line.innerText = 'Participante: ' + participant.name + ' | Votos: ' + voteCountText;
-      reportDiv.appendChild(line);
+      var header = document.createElement('h1');
+      header.innerText = 'Relatório de Votação';
+      reportDiv.appendChild(header);
+
+      for (var participantNumber in participants) {
+        if (participants.hasOwnProperty(participantNumber)) {
+          var participant = participants[participantNumber];
+          var voteCountText = voteCount[participantNumber] || 0;
+
+          var line = document.createElement('p');
+          line.innerText = 'Participante: ' + participant.name + ' | Votos: ' + voteCountText;
+          reportDiv.appendChild(line);
+        }
+      }
+
+      var options = {
+        margin: 10,
+        filename: 'relatorio.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(options).from(reportDiv).save();
     }
-  }
-  
-  var options = {
-    margin: 10,
-    filename: 'relatorio.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-  
-  html2pdf().set(options).from(reportDiv).save();
-}
 
 
-function clearVotes() {
-  if (confirm('Tem certeza de que deseja limpar todos os votos? Essa ação não pode ser desfeita.')) {
-    localStorage.removeItem('voteCount');
-    alert('Os votos foram limpos com sucesso.');
-  }
-}
+    function clearVotes() {
+      if (confirm('Tem certeza de que deseja limpar todos os votos? Essa ação não pode ser desfeita.')) {
+        localStorage.removeItem('voteCount');
+        alert('Os votos foram limpos com sucesso.');
+      }
+    }
 
   </script>
 
-  
+
 </head>
+
 <body>
   <div class="container">
     <h1>Votação</h1>
-    
+
     <div class="form-group">
-      <input type="number" id="participantNumber" placeholder="Digite o número do participante" oninput="showParticipant()">
+      <input type="number" id="participantNumber" placeholder="Digite o número do participante"
+        oninput="showParticipant()">
     </div>
-    
+
     <div id="participantDiv">
       <div class="participant">
         <img id="participantImage" src="" alt="">
         <strong id="participantName"></strong>
       </div>
-      
+
       <div class="form-group">
         <button onclick="confirmVote()">Confirmar Voto</button>
       </div>
     </div>
-    
+
     <div class="form-group">
       <button onclick="generateReport()">Gerar Relatório</button><br>
       <button onclick="clearVotes()">Limpar Votos</button>
     </div>
-    
+
+
+
   </div>
 </body>
+
 </html>
