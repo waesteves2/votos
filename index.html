@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <title>Votação</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .participant {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+    }
+    
+    .participant img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    .participant strong {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+
+    }
+    
+    .form-group button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      color: #fff;
+      background-color: #080808;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    #participantDiv {
+      display: none;
+    }
+  </style>
+   <script>
+    var participants = {
+      1: { name: "Elton", image: "https://scontent.fbau3-1.fna.fbcdn.net/v/t1.6435-1/89024202_951962008552167_1314257677588627456_n.jpg?stp=cp0_dst-jpg_e15_p120x120_q65&_nc_cat=111&ccb=1-7&_nc_sid=dbb9e7&_nc_ohc=nSuBQRzgTtkAX-EmOoF&_nc_ht=scontent.fbau3-1.fna&oh=00_AfB8A8oWnHZVQHuQWbXB8VaGerolf0UP9AQZIAw6B-LsPg&oe=64BDB202" },
+      2: { name: "Daniela", image: "caminho_da_imagem_participante_2.jpg" },
+    };
+    
+    var voteCount = JSON.parse(localStorage.getItem('voteCount')) || {};
+
+    function showParticipant() {
+      var participantNumber = document.getElementById('participantNumber').value;
+      
+      var participantDiv = document.getElementById('participantDiv');
+      
+      if (participants[participantNumber]) {
+        var participant = participants[participantNumber];
+        
+        var participantImage = document.getElementById('participantImage');
+        participantImage.src = participant.image;
+        participantImage.alt = participant.name;
+        
+        var participantName = document.getElementById('participantName');
+        participantName.innerHTML = participant.name;
+        
+        participantDiv.style.display = 'block';
+      } else {
+        alert('Número inválido. Verifique o número digitado.');
+        participantDiv.style.display = 'none';
+      }
+    }
+    
+    function confirmVote() {
+      var participantNumber = document.getElementById('participantNumber').value;
+      
+      if (participants[participantNumber]) {
+        if (voteCount[participantNumber]) {
+          voteCount[participantNumber]++;
+        } else {
+          voteCount[participantNumber] = 1;
+        }
+        
+        alert('Voto confirmado!');
+        
+        document.getElementById('participantNumber').value = '';
+        
+        var participantDiv = document.getElementById('participantDiv');
+        participantDiv.style.display = 'none';
+        
+        localStorage.setItem('voteCount', JSON.stringify(voteCount));
+      } else {
+        alert('Número inválido. Verifique o número digitado.');
+      }
+    }
+
+    function generateReport() {
+  var reportDiv = document.createElement('div');
+  
+  var header = document.createElement('h1');
+  header.innerText = 'Relatório de Votação';
+  reportDiv.appendChild(header);
+  
+  for (var participantNumber in participants) {
+    if (participants.hasOwnProperty(participantNumber)) {
+      var participant = participants[participantNumber];
+      var voteCountText = voteCount[participantNumber] || 0;
+
+      var line = document.createElement('p');
+      line.innerText = 'Participante: ' + participant.name + ' | Votos: ' + voteCountText;
+      reportDiv.appendChild(line);
+    }
+  }
+  
+  var options = {
+    margin: 10,
+    filename: 'relatorio.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(options).from(reportDiv).save();
+}
+
+
+function clearVotes() {
+  if (confirm('Tem certeza de que deseja limpar todos os votos? Essa ação não pode ser desfeita.')) {
+    localStorage.removeItem('voteCount');
+    alert('Os votos foram limpos com sucesso.');
+  }
+}
+
+  </script>
+
+  
+</head>
+<body>
+  <div class="container">
+    <h1>Votação</h1>
+    
+    <div class="form-group">
+      <input type="number" id="participantNumber" placeholder="Digite o número do participante" oninput="showParticipant()">
+    </div>
+    
+    <div id="participantDiv">
+      <div class="participant">
+        <img id="participantImage" src="" alt="">
+        <strong id="participantName"></strong>
+      </div>
+      
+      <div class="form-group">
+        <button onclick="confirmVote()">Confirmar Voto</button>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <button onclick="generateReport()">Gerar Relatório</button><br>
+      <button onclick="clearVotes()">Limpar Votos</button>
+    </div>
+    
+  </div>
+</body>
+</html>
